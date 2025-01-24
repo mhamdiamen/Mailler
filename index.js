@@ -7,7 +7,7 @@ const app = express();
 
 // Middleware pour autoriser les requêtes cross-origin
 app.use(cors({
-  origin: 'http://localhost:4200', // Autoriser uniquement les requêtes provenant de cette origine
+  origin: '*', // Autoriser uniquement les requêtes provenant de cette origine
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes HTTP autorisées
   allowedHeaders: ['Content-Type', 'Authorization'] // En-têtes autorisés
 }));
@@ -29,7 +29,7 @@ app.post('/send-email', (req, res) => {
     return res.status(400).json({ message: 'Tous les champs sont obligatoires : from, to, subject, text' });
   }
 
-  // Créer le contenu HTML de l'e-mail
+  // Créer le contenu HTML de l'e-mail pour le destinataire
   const htmlContent = `
     <html>
       <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
@@ -49,21 +49,60 @@ app.post('/send-email', (req, res) => {
     </html>
   `;
 
-  const mailOptions = {
+  // Options pour l'e-mail au destinataire
+  const mailOptionsToRecipient = {
     from: from, // Expéditeur
     to: to, // Destinataire
     subject: subject, // Objet de l'e-mail
     html: htmlContent, // Corps de l'e-mail en HTML
   };
 
-  // Envoyer l'e-mail
-  transporter.sendMail(mailOptions, (error, info) => {
+  // Envoyer l'e-mail au destinataire
+  transporter.sendMail(mailOptionsToRecipient, (error, info) => {
     if (error) {
-      console.error('Erreur lors de l\'envoi de l\'e-mail :', error);
+      console.error('Erreur lors de l\'envoi de l\'e-mail au destinataire :', error);
       return res.status(500).json({ message: 'Erreur lors de l\'envoi de l\'e-mail', error: error.message });
     } else {
-      console.log('E-mail envoyé avec succès :', info.response);
-      return res.status(200).json({ message: 'E-mail envoyé avec succès', info: info.response });
+      console.log('E-mail envoyé avec succès au destinataire :', info.response);
+
+      // Créer le contenu HTML de l'e-mail de confirmation à l'expéditeur
+      const confirmationHtmlContent = `
+        <html>
+          <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #333333;">Confirmation de réception</h2>
+              <p style="color: #555555;">Bonjour,</p>
+              <p style="color: #555555;">Nous avons bien reçu votre message et vous en remercions. Notre équipe vous contactera dans les plus brefs délais.</p>
+              <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <h3 style="color: #333333;">Résumé de votre message :</h3>
+                <p style="color: #555555;"><strong>Sujet :</strong> ${subject}</p>
+                <p style="color: #555555;"><strong>Message :</strong></p>
+                <p style="color: #555555; white-space: pre-wrap;">${text}</p>
+              </div>
+              <p style="color: #777777; margin-top: 20px;">Cordialement,<br>L'équipe Sinerji</p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      // Options pour l'e-mail de confirmation à l'expéditeur
+      const mailOptionsToSender = {
+        from: to, // Expéditeur (votre adresse e-mail)
+        to: from, // Destinataire (l'expéditeur du formulaire)
+        subject: 'Confirmation de réception de votre message', // Objet de l'e-mail
+        html: confirmationHtmlContent, // Corps de l'e-mail en HTML
+      };
+
+      // Envoyer l'e-mail de confirmation à l'expéditeur
+      transporter.sendMail(mailOptionsToSender, (error, info) => {
+        if (error) {
+          console.error('Erreur lors de l\'envoi de l\'e-mail de confirmation :', error);
+          return res.status(500).json({ message: 'Erreur lors de l\'envoi de l\'e-mail de confirmation', error: error.message });
+        } else {
+          console.log('E-mail de confirmation envoyé avec succès à l\'expéditeur :', info.response);
+          return res.status(200).json({ message: 'E-mail envoyé avec succès', info: info.response });
+        }
+      });
     }
   });
 });
