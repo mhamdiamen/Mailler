@@ -1,16 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors'); // Importer le package cors
 
 const app = express();
+
+// Middleware pour autoriser les requêtes cross-origin
+app.use(cors({
+  origin: 'http://localhost:4200', // Autoriser uniquement les requêtes provenant de cette origine
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes HTTP autorisées
+  allowedHeaders: ['Content-Type', 'Authorization'] // En-têtes autorisés
+}));
 
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail', 
+  service: 'gmail',
   auth: {
-    user: 'mhamdiamenallah666@gmail.com', 
-    pass: 'jmes wwii epry aima', // Replace with your actual app password
+    user: 'mhamdiamenallah666@gmail.com',
+    pass: 'jmes wwii epry aima', // Remplacez par votre mot de passe d'application
   },
 });
 
