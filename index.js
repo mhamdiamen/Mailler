@@ -31,7 +31,6 @@ app.post('/send-email', (req, res) => {
 
   const mailOptions = {
     from: from, // Expéditeur
-    to: to, // Destinataire
     subject: subject, // Objet de l'e-mail
     text: text, // Corps de l'e-mail
   };
