@@ -23,14 +23,15 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/send-email', (req, res) => {
-  const { from, subject, text } = req.body;
+  const { from, to, subject, text } = req.body;
 
-  if (!from  || !subject || !text) {
+  if (!from || !to || !subject || !text) {
     return res.status(400).json({ message: 'Tous les champs sont obligatoires : from, to, subject, text' });
   }
 
   const mailOptions = {
     from: from, // Expéditeur
+    to: to, // Destinataire
     subject: subject, // Objet de l'e-mail
     text: text, // Corps de l'e-mail
   };
