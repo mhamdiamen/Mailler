@@ -31,22 +31,32 @@ app.post('/send-email', (req, res) => {
 
   // Créer le contenu HTML de l'e-mail pour le destinataire
   const htmlContent = `
-    <html>
-      <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-        <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333333;">Nouveau message de contact</h2>
-          <p style="color: #555555;">Vous avez reçu un nouveau message de la part de <strong>${from}</strong>.</p>
-          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
-            <h3 style="color: #333333;">Détails du message :</h3>
-            <p style="color: #555555;"><strong>Expéditeur :</strong> ${from}</p>
-            <p style="color: #555555;"><strong>Sujet :</strong> ${subject}</p>
-            <p style="color: #555555;"><strong>Message :</strong></p>
-            <p style="color: #555555; white-space: pre-wrap;">${text}</p>
-          </div>
-          <p style="color: #777777; margin-top: 20px;">Ce message a été envoyé via le formulaire de contact de votre site web.</p>
+  <html>
+    <body style="font-family: 'Arial', sans-serif; background-color: #f9fafb; padding: 40px 20px;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <!-- Header -->
+        <div style="background-color: #3b82f6; padding: 20px; text-align: center;">
+          <h2 style="color: #ffffff; margin: 0; font-size: 24px;">New Contact Message</h2>
         </div>
-      </body>
-    </html>
+        <!-- Content -->
+        <div style="padding: 20px;">
+          <p style="color: #374151; font-size: 16px; line-height: 1.5;">You have received a new message from <strong>${from}</strong>.</p>
+          <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin-top: 20px;">
+            <h3 style="color: #111827; font-size: 18px; margin-bottom: 12px;">Message Details</h3>
+            <p style="color: #4b5563; margin: 8px 0;"><strong>From:</strong> ${from}</p>
+            <p style="color: #4b5563; margin: 8px 0;"><strong>Subject:</strong> ${subject}</p>
+            <p style="color: #4b5563; margin: 8px 0;"><strong>Message:</strong></p>
+            <p style="color: #4b5563; white-space: pre-wrap; background-color: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">${text}</p>
+          </div>
+          <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">This message was sent via the contact form on your website.</p>
+        </div>
+        <!-- Footer -->
+        <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+          <p style="color: #6b7280; font-size: 14px; margin: 0;">&copy; ${new Date().getFullYear()} Sinerji. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+  </html>
   `;
 
   // Options pour l'e-mail au destinataire
@@ -67,24 +77,33 @@ app.post('/send-email', (req, res) => {
 
       // Créer le contenu HTML de l'e-mail de confirmation à l'expéditeur
       const confirmationHtmlContent = `
-        <html>
-          <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-            <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #333333;">Confirmation de réception</h2>
-              <p style="color: #555555;">Bonjour,</p>
-              <p style="color: #555555;">Nous avons bien reçu votre message et vous en remercions. Notre équipe vous contactera dans les plus brefs délais.</p>
-              <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px;">
-                <h3 style="color: #333333;">Résumé de votre message :</h3>
-                <p style="color: #555555;"><strong>Sujet :</strong> ${subject}</p>
-                <p style="color: #555555;"><strong>Message :</strong></p>
-                <p style="color: #555555; white-space: pre-wrap;">${text}</p>
-              </div>
-              <p style="color: #777777; margin-top: 20px;">Cordialement,<br>L'équipe Sinerji</p>
+      <html>
+        <body style="font-family: 'Arial', sans-serif; background-color: #f9fafb; padding: 40px 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+            <!-- Header -->
+            <div style="background-color: #10b981; padding: 20px; text-align: center;">
+              <h2 style="color: #ffffff; margin: 0; font-size: 24px;">Message Received</h2>
             </div>
-          </body>
-        </html>
+            <!-- Content -->
+            <div style="padding: 20px;">
+              <p style="color: #374151; font-size: 16px; line-height: 1.5;">Hello,</p>
+              <p style="color: #374151; font-size: 16px; line-height: 1.5;">We have received your message and will get back to you as soon as possible.</p>
+              <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                <h3 style="color: #111827; font-size: 18px; margin-bottom: 12px;">Your Message Summary</h3>
+                <p style="color: #4b5563; margin: 8px 0;"><strong>Subject:</strong> ${subject}</p>
+                <p style="color: #4b5563; margin: 8px 0;"><strong>Message:</strong></p>
+                <p style="color: #4b5563; white-space: pre-wrap; background-color: #ffffff; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb;">${text}</p>
+              </div>
+              <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">Thank you for reaching out to us. We appreciate your interest!</p>
+            </div>
+            <!-- Footer -->
+            <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">&copy; ${new Date().getFullYear()} Sinerji. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>
       `;
-
       // Options pour l'e-mail de confirmation à l'expéditeur
       const mailOptionsToSender = {
         from: to, // Expéditeur (votre adresse e-mail)
