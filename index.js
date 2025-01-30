@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
     pass: 'jmes wwii epry aima', // Remplacez par votre mot de passe d'application
   },
 });
-
+//update
 app.post('/send-catalogue', (req, res) => {
   const { email } = req.body;
 
