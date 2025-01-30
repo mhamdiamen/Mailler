@@ -22,6 +22,54 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+app.post('/send-catalogue', (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  const cataloguePath = path.join(__dirname, 'catalogue.pdf'); // Path to catalogue file
+
+  // Email to the user with the catalogue PDF
+  const mailOptionsUser = {
+    from: 'mhamdiamenallah666@gmail.com',
+    to: email,
+    subject: 'Your Catalogue Request',
+    html: `<p>Hello,</p>
+           <p>Thank you for requesting our catalogue. Please find the catalogue attached below.</p>
+           <p>Best regards,<br/>Sinerji Team</p>`,
+    attachments: [{ filename: 'catalogue.pdf', path: cataloguePath }],
+  };
+
+  transporter.sendMail(mailOptionsUser, (error, info) => {
+    if (error) {
+      console.error('Error sending email to user:', error);
+      return res.status(500).json({ message: 'Error sending email', error: error.message });
+    }
+
+    console.log('Email sent to user:', info.response);
+
+    // Notify admin about the request
+    const mailOptionsAdmin = {
+      from: 'mhamdiamenallah666@gmail.com',
+      to: 'mhamdiamenallah666@gmail.com',
+      subject: 'New Catalogue Request',
+      html: `<p>A user has requested the catalogue.</p><p>Email: ${email}</p>`,
+    };
+
+    transporter.sendMail(mailOptionsAdmin, (err, adminInfo) => {
+      if (err) {
+        console.error('Error notifying admin:', err);
+        return res.status(500).json({ message: 'Error notifying admin', error: err.message });
+      }
+
+      console.log('Admin notified:', adminInfo.response);
+      res.status(200).json({ message: 'Catalogue sent successfully' });
+    });
+  });
+});
+
 app.post('/send-email', (req, res) => {
   const { from, to, subject, text } = req.body;
 
